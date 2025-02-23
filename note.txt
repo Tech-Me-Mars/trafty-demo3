@@ -1,0 +1,8 @@
+shop_name
+business_type
+shop_details
+shop_address
+shop_phone
+business_email
+image_profile
+business_img

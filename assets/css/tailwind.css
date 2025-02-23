@@ -1,0 +1,63 @@
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */
+
+
+@layer tailwind-base, primevue, tailwind-utilities;
+
+@layer tailwind-base {
+  @tailwind base;
+}
+
+@layer primevue {
+  @tailwind components;
+}
+
+@layer tailwind-utilities {
+  .card-content {
+    @apply bg-white shadow-lg rounded-t-[50px];
+  }
+  .header-label {
+    @apply text-xl text-center font-bold;
+  }
+  .label-input {
+    @apply text-gray-500 text-sm mb-1;
+  }
+  .label-survay {
+    @apply  font-medium;
+  }
+  .error-text{
+    @apply text-red-500 mt-1
+  }
+  
+  .card {
+    @apply bg-white shadow-sm rounded-sm p-4;
+    
+  }
+  @tailwind utilities;
+}
+
+/* assets/css/global.css */
+.p-component {
+  @apply !text-black;
+}
+
+
+/* html{
+  font-size: 14px;
+}*/
+body {
+  margin: 0px !important;
+  padding: 0px !important;
+} 
+* {
+  font-family: "Noto Sans Thai", sans-serif;
+}
+
+.custom-border {
+  /* border-color: #ffc83A!important; */
+  border: 1.5px solid #ffc83A!important;
+}
+
+
+
