@@ -245,7 +245,7 @@ const triggerFileInputProfile = () => {
         </template>
 </van-nav-bar> -->
     <section class="p-4 card-content">
-      {{ errors }}
+
       <Form @submit="onSubmit">
         <div class="card pt-0 mb-10">
           <div class="space-y-4 mb-2">
