@@ -17,6 +17,7 @@
     <div class="p-6 bg-yellow-400 text-black">
       <h1 class="text-2xl font-bold">TOURIST</h1>
       <h1 class="text-2xl font-bold">POLICE</h1>
+      <Button label="ABCDEFG UVWXY"  />
     </div>
 
     <!-- Content -->

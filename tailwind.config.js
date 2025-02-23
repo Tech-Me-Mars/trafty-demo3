@@ -5,13 +5,14 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['"Noto Sans Thai"', 'sans-serif'],
+        sarabun: ['Sarabun', 'sans-serif'], // เพิ่มฟอนต์ Sarabun
       },
       colors: {
         primary: {
-          main: '#ffc83A', // ชื่อหลัก primary
-          // dark: '#ffc83A',    // เฉดมืด (กำหนดเพิ่มตามต้องการ)
-          // light: '#ffc83A',   // เฉดสว่าง (กำหนดเพิ่มตามต้องการ)
+          main: '#ff4b3a', // ชื่อหลัก primary
+        },
+        secondary: {
+          main: '#fffc34', // ชื่อหลัก primary
         },
       },
     },

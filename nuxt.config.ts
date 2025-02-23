@@ -63,8 +63,11 @@ export default defineNuxtConfig({
     defaultLocale: "th-TH",
   },
   googleFonts: {
+    // families: {
+    //   'Noto+Sans+Thai': [400, 500, 700], // น้ำหนักที่ต้องการ
+    // },
     families: {
-      'Noto+Sans+Thai': [400, 500, 700], // น้ำหนักที่ต้องการ
+      'Sarabun': [400, 500, 600, 700], // ใช้ Regular, Medium, SemiBold, Bold
     },
     display: 'swap', // การโหลดฟอนต์ (swap ช่วยลด FOUC - Flash of Unstyled Content)
     prefetch: true, // ล่วงหน้าเพื่อประสิทธิภาพ
