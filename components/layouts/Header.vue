@@ -1,5 +1,5 @@
 <template>
-    <header style="background-color: #ffc83A;height: 120px;" class="flex flex-col items-center justify-center">
+    <header style="background-color: white;height: 120px;" class="">
         <slot></slot>
     </header>
 </template>

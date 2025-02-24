@@ -12,7 +12,7 @@
         <!-- ข้อความต้อนรับ -->
         <h1 class="text-white text-xl font-semibold mb-20">ยินดีต้อนรับเข้าสู่ บช ทท</h1>
   
-        <Button label="เริ่มต้น" class="!bg-secondary-main w-full" />
+        <Button @click="navigateTo('/vendor/register-business/')" label="เริ่มต้น" class="!bg-secondary-main w-full" />
       </div>
     </div>
   </template>

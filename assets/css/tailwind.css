@@ -18,10 +18,10 @@
     @apply bg-white shadow-lg rounded-t-[50px];
   }
   .header-label {
-    @apply text-xl text-center font-bold;
+    @apply text-xl text-center font-bold text-primary-main py-1;
   }
   .label-input {
-    @apply text-gray-500 text-sm mb-1;
+    @apply text-primary-main text-sm mb-1;
   }
   .label-survay {
     @apply  font-medium;
@@ -56,11 +56,14 @@ body {
 }
 
 .custom-border {
-  border-radius: 0!important; /* ลบขอบมน */
-  box-shadow: none!important; /* ลบเงา */
-  transition: border-color 0.3s ease!important; /* เพิ่มเอฟเฟกต์เปลี่ยนสี */
-  background-color: #fefefe!important;
+  border-radius: 0 !important; /* ลบขอบมน */
+  box-shadow: none !important; /* ลบเงา */
+  transition: border-color 0.3s ease !important; /* เพิ่มเอฟเฟกต์เปลี่ยนสี */
+  background-color: #f2f3f2 !important;
+  border: none !important; /* ลบขอบทั้งหมด */
+  border-bottom: 2px solid #d1d5db !important; /* เพิ่มเฉพาะเส้นขอบด้านล่าง */
 }
+
 
 .custom-border:focus {
   /* border-color: red; */
@@ -69,7 +72,7 @@ body {
 }
 
 .p-select:not(.p-disabled).p-focus {
-  border-color: black!important;
+  border-color: #f2f3f2!important;
   box-shadow: var(--p-select-focus-ring-shadow);
   outline: none!important;
   outline-offset: var(--p-select-focus-ring-offset);
