@@ -6,6 +6,9 @@
 </template>
 
 <script setup>
+definePageMeta({
+    middleware: ["auth"],
+});
 import { useFormStore } from '@/store/businessStore.js';
 
 import widgetStep1 from './widgets/step1.vue';

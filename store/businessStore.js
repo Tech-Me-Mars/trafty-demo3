@@ -4,7 +4,7 @@ export const useFormStore = defineStore('form', {
   state: () => ({
     activePage: 1,
 
-    business_type_namebusiness_type_id: null,
+    business_type_id: null,
     business_type_name:'',
     shop_name: '',
     shop_address: '',

@@ -10,7 +10,7 @@
             <!-- Header -->
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-2xl font-bold text-gray-800">ร้านค้าของฉัน</h2>
-                <button @click="addShop"
+                <button @click="navigateTo('/vendor/register-business/welcome')"
                     class="flex items-center gap-2 px-4 py-2 bg-yellow-400 text-black font-semibold rounded-lg shadow-md hover:bg-yellow-500 transition">
                     <i class="fa-solid fa-plus"></i> เพิ่มร้านค้า
                 </button>

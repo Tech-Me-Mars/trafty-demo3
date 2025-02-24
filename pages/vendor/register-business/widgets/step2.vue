@@ -1,17 +1,14 @@
 <template>
   <div class="flex flex-col items-center justify-center min-h-screen p-6">
     <!-- ปุ่มย้อนกลับ -->
-     
-    <button
-      class="absolute top-4 left-4 bg-red-500 text-white w-10 h-10 flex items-center justify-center rounded-full shadow-md hover:bg-red-600 transition">
-      <i class="fa-solid fa-arrow-left text-xl"></i>
-    </button>
+
+    <BackPage class="absolute top-4 left-4" @click="formStore.prevPage"/>
 
     <!-- หัวข้อ -->
     <h2 class="text-red-500 font-bold text-2xl mt-6">รูปภาพธุรกิจการท่องเที่ยว</h2>
     <p class="text-gray-600 text-center mt-2">เพิ่มรูปภาพธุรกิจการท่องเที่ยวของคุณ</p>
     <Form @submit="handleNext">
-
+ 
     <!-- กล่องอัปโหลดรูปภาพ -->
     <input ref="fileInputBgProfile" type="file" accept="image/*" @change="onFileSelectBgProfile" class="hidden" />
     <div class="relative mt-6" v-if="!image_profile">
@@ -33,12 +30,12 @@
 
 
     <!-- ปุ่มบันทึก -->
-    <button
-      class="mt-8 bg-red-500 !text-secondary-main font-bold text-lg w-full max-w-xs py-3 rounded-lg shadow-md hover:bg-red-600 transition">
-      บันทึกข้อมูล
-    </button>
-    <Button  label="บันทึกข้อมูล" :loading="isloadingAxi" />/
-    </Form>
+
+    <div class="flex justify-center mt-10">
+    <Button  label="บันทึกข้อมูล" type="submit" class="!text-secondary-main" :loading="isloadingAxi" />
+
+    </div>
+  </Form>
   </div>
 </template>
 
@@ -72,8 +69,9 @@ const { handleSubmit, handleReset, errors } = useForm({
 const { value: image_profile } = useField('image_profile')
 import { useFormStore } from "@/store/businessStore.js";
 const formStore = useFormStore(); // ใช้ Pinia Store
-const handleNext = handleSubmit(() => {
-  try {
+const handleNext = handleSubmit(async() => {
+  try { 
+    console.log('on handle')
     const formData = new FormData();
     formData.append("business_type_id", parseInt(formStore.business_type_id));
     formData.append("business_type_name", formStore.business_type_name || "");
@@ -83,13 +81,12 @@ const handleNext = handleSubmit(() => {
     formData.append("shop_details", formStore.shop_details);
     formData.append("image_profile", image_profile.value.file);
     formData.append("status", true);
-
-
-        navigateTo('/vendor/my-business')
+    const res = await dataApi.saveBusinessRegister(formData)
+    navigateTo(`/vendor/register-business/success/${res.data.data?.id}`)
     } catch (error) {
         console.error(error)
         alertToast.value = {
-            title: t("ล้มเหลว"),
+            title: ("ล้มเหลว"),
             isError: true,
             color: "error",
             msg: error.response?.data?.message || "Error occurred",
@@ -105,7 +102,6 @@ const onFileSelectBgProfile = (event) => {
     const reader = new FileReader();
     reader.onload = (e) => {
       image_profile.value = { src: e.target.result, file: file };
-      console.log('image_profile', image_profile.value)
     };
     reader.readAsDataURL(file);
   }

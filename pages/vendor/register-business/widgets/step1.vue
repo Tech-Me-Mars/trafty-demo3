@@ -107,7 +107,7 @@ const onSubmit = handleSubmit(async () => {
         <h1 class="header-label">กรอกข้อมูลของคุณ</h1>
       </template>
       <template #left>
-        <back-page />
+        <back-page @click="navigateTo('/vendor/my-business')"/>
       </template>
     </van-nav-bar>
     <section class="p-4 card-content">

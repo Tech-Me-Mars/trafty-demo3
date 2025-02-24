@@ -4,7 +4,7 @@ definePageMeta({
 });
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
-import widgetMap from "./widgets/widget-map.vue";
+// import widgetMap from "./widgets/widget-map.vue";
 import { showToast } from "vant";
 
 const router = useRouter();
@@ -12,26 +12,27 @@ const route = useRoute();
 const alertToast = ref({});
 import * as dataApi from "./api/data.js";
 
-const resDataComon =ref()
-const loadDataComon= async ()=>{
-    try {
-        const res= await dataApi.getNotificationPolice();
-        resDataComon.value =res.data.data;
-    } catch (error) {
-        alertToast.value = {
-            title: t('"ล้มเหลว"'),
-            isError: true,
-            color: "error",
-            msg: error.response?.data?.message || "Error occurred",
-            dataError: error,
-        };
-    }
+const resDataComon = ref()
+const loadDataComon = async () => {
+  try {
+    const res = await dataApi.getNotificationPolice();
+    resDataComon.value = res.data.data;
+  } catch (error) {
+    alertToast.value = {
+      title: "ล้มเหลว",
+      isError: true,
+      color: "error",
+      msg: error.response?.data?.message || "Error occurred",
+      dataError: error,
+    };
+  }
 }
-onMounted(()=>{
-    loadDataComon();
+
+onMounted(() => {
+  loadDataComon();
 })
 const onClick = (title) => {
-    // showToast(`คุณคลิกที่ "${title}"`);
+  // showToast(`คุณคลิกที่ "${title}"`);
 };
 </script>
 
@@ -39,88 +40,78 @@ const onClick = (title) => {
 /* Tailwind CSS จะดูแลส่วนของสไตล์ */
 </style>
 <style scoped>
-.menu-item {
-  @apply flex items-center justify-between bg-white py-4 px-5 rounded-lg shadow-md text-gray-700 text-lg font-medium;
-}
-.menu-item i {
-  @apply text-gray-500;
-}
-.van-nav-bar {
-    --van-nav-bar-background: #ffc83A;
-    --van-nav-bar-text-color: black;
-    --van-nav-bar-icon-color: black;
-    --van-nav-bar-title-text-color: black;
-    --van-nav-bar-height: 70px
+.card {
+  @apply flex flex-col items-center bg-white p-6 rounded-lg shadow-md border-2 border-yellow-500;
 }
 
-.van-cell {
-    --van-cell-line-height: 40px;
-    --van-cell-text-color: black;
-    --van-cell-right-icon-color: black;
+
+.van-nav-bar {
+  --van-nav-bar-background: white;
+  --van-nav-bar-height: 80px
 }
 </style>
+
 <template>
-    <div class="min-h-screen bg-yellow-400 p-6">
+  <div class="min-h-screen bg-white flex flex-col">
+    <van-nav-bar >
+      <template #left>
+        <h1 class="header-label">ระบบบริหารจัดการข้อมูลตำรวจ</h1>
+      </template>
+      <template #right>
+        <i class="fas fa-user-circle text-gray-400 text-3xl"></i>
+      </template>
+    </van-nav-bar>
+
+    <div class="flex flex-col items-center  bg-cover bg-center flex-grow p-6"
+    style="background-image: url('/image/bg/bangkok-bg.png');">
     <!-- Header -->
-    <div class="flex justify-between items-center mb-6">
-      <!-- Profile Image -->
-      <img
-        src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
-        alt="Profile"
-        class="w-10 h-10 rounded-full border-2 border-white"
-      />
-      <!-- Menu Icon -->
-      <!-- <button
-        class="w-10 h-10 bg-yellow-300 flex items-center justify-center rounded-full shadow-md hover:bg-yellow-500 transition"
-      >
-        <i class="fa-solid fa-bars text-lg text-black"></i>
-      </button> -->
-      <DrawerMenu/>
-    </div>
 
-    <!-- Title -->
-    <h2 class="text-xl font-bold text-black text-center mb-6">
-      ระบบบริหารจัดการข้อมูล
-    </h2>
-
-    <!-- Menu List -->
-    <div class="space-y-4">
-
-      <div class="menu-item relative" @click="navigateTo('/inspector/list/business-tourlist')">
-        <i class="fa-solid fa-map-location-dot"></i>
-        <span>จัดการแหล่งท่องเที่ยว</span>
-        <span v-if="resDataComon?.notify_business_tourist>0"
-          class="absolute right-4 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full"
-          >{{ resDataComon?.notify_business_tourist }}</span
-        >
-        <i class="fa-solid fa-chevron-right text-gray-500"></i>
+    <!-- Grid Layout -->
+    <div class="grid grid-cols-2 gap-4 w-full max-w-md">
+      <!-- Card 1 -->
+      <div class="card flex flex-col justify-between" >
+        <i class="fas fa-map-marked-alt text-red-500 text-5xl"></i>
+        <p class="text-center text-lg font-medium mt-2">จัดการแหล่งท่องเที่ยว</p>
+        <Button v-if="resDataComon?.notify_business_tourist>0" type="button" class=" !text-primary-main" :badge="resDataComon?.notify_business_tourist" badgeSeverity="primary" outlined label="ดูข้อมูล"
+          @click="navigateTo('/inspector/list/business-tourlist')"></Button>
+        <Button v-else type="button" class=" !text-primary-main"  outlined label="ดูข้อมูล"
+        @click="navigateTo('/inspector/list/business-tourlist')" ></Button>
       </div>
 
-      <div class="menu-item relative" @click="navigateTo('/inspector/list/business-tourlist')">
-        <i class="fa-solid fa-store"></i>
-        <span>จัดการธุรกิจในแหล่งท่องเที่ยว</span>
-        <span v-if="resDataComon?.notify_business_tourist>0"
-          class="absolute right-4 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full"
-          >{{ resDataComon?.notify_business_tourist }}</span
-        >
-        <i class="fa-solid fa-chevron-right text-gray-500"></i>
+      <!-- Card 2 -->
+      <div class="card flex flex-col justify-between">
+        <i class="fas fa-store text-red-500 text-5xl"></i>
+        <p class="text-center text-lg font-medium mt-2">จัดการธุรกิจในแหล่งท่องเที่ยว</p>
+        <Button v-if="resDataComon?.notify_business_tourist>0" type="button" class=" !text-primary-main" :badge="resDataComon?.notify_business_tourist" badgeSeverity="primary" outlined label="ดูข้อมูล"
+          @click="navigateTo('/inspector/list/business-tourlist')"></Button>
+        <Button v-else type="button" class=" !text-primary-main"  outlined label="ดูข้อมูล"
+        @click="navigateTo('/inspector/list/business-tourlist')" ></Button>
       </div>
 
-      <div class="menu-item">
-        <i class="fa-solid fa-comments"></i>
-        <span>ตรวจสอบคอมเมนท์</span>
-        <i class="fa-solid fa-chevron-right text-gray-500"></i>
+      <!-- Card 3 -->
+      <div class="card flex flex-col justify-between">
+        <i class="fas fa-file-alt text-red-500 text-5xl"></i>
+        <p class="text-center text-lg font-medium mt-2">จัดการใบเตือน</p>
+        <Button v-if="resDataComon?.notify_warning>0" type="button" class=" !text-primary-main" :badge="resDataComon?.notify_warning" badgeSeverity="primary" outlined label="ดูข้อมูล"
+          @click="navigateTo('/inspector/list/business-tourlist')"></Button>
+        <Button v-else type="button" class=" !text-primary-main"  outlined label="ดูข้อมูล"
+        @click="navigateTo('/inspector/list/business-tourlist')" ></Button>
       </div>
 
-      <div class="menu-item relative" @click="navigateTo('/inspector/warning-list')">
-        <i class="fa-solid fa-store"></i>
-        <span>จัดการใบเตือน</span>
-        <span v-if="resDataComon?.notify_warning>0"
-          class="absolute right-4 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full"
-          >{{ resDataComon?.notify_warning }}</span
-        >
-        <i class="fa-solid fa-chevron-right text-gray-500"></i>
+      <!-- Card 4 -->
+      <div class="card flex flex-col justify-between">
+        <i class="fas fa-comments text-red-500 text-5xl"></i>
+        <p class="text-center text-lg font-medium mt-2">ตรวจสอบคอมเมนท์</p>
+        <Button class="btn mt-auto !text-primary-main" outlined>ดูข้อมูล</Button>
       </div>
     </div>
+
+    <!-- Logout Button -->
+    <button class="logout-btn bg-white py-3 w-full mt-10" severity="secondary" @click="navigateTo('/auth/login')" >ออกจากระบบ</button>
   </div>
+
+  </div>
+
+
+  
 </template>
