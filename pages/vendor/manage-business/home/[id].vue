@@ -19,7 +19,7 @@
         <i class="fas fa-circle-exclamation"></i>
         <span class="text-sm font-medium">รออนุมัติ</span>
       </div>
-      <div class="flex items-center gap-2 mt-2 bg-red-100 text-green-500 px-3 py-1 rounded-sm" v-if="resShop?.status == true">
+      <div class="flex items-center gap-2 mt-2 bg-green-50 text-green-500 px-3 py-1 rounded-sm" v-if="resShop?.status == true">
         <i class="fa-solid fa-circle-check"></i>
         <span class="text-sm font-medium">ได้รับอนุมัติจากเจ้าหน้าที่</span>
       </div>
@@ -31,8 +31,11 @@
         <li class="py-3 px-4 flex items-center justify-between text-red-500 font-medium">
           ข้อมูลร้านค้า
         </li>
-        <li class="py-3 px-4 flex items-center justify-between text-gray-600">
+        <li class="py-3 px-4 flex items-center justify-between text-gray-600 cursor-pointer" @click="navigateTo(`/vendor/notifications/${route.params.id}`)">
           การแจ้งเตือน
+          <!-- <van-badge :content="getNotifyCoute" v-if="getNotifyCoute>0">
+          </van-badge> -->
+          <Badge v-if="getNotifyCoute>0" :value="getNotifyCoute" class="!text-white"></Badge>
         </li>
         <li class="py-3 px-4 flex items-center justify-between text-gray-600">
           แก้ไขข้อมูลร้านค้า
@@ -42,7 +45,7 @@
 
     <!-- ปุ่มออกจากระบบ -->
 
-    <Button label="ออกจากระบบ" class="!text-secondary-main !px-10 mt-8" />
+    <Button label="ออกจากระบบ" @click="navigateTo('/auth/login')" class="!text-secondary-main !px-10 mt-8" />
   </div>
 </template>
 <script setup>
@@ -76,5 +79,15 @@ const loadShop = async () => {
 
 onMounted(() => {
   loadShop();
+  loadNotyfy()
 })
+const getNotifyCoute =ref(0);
+const loadNotyfy =async () =>{
+    try {
+            const res  = await dataApi.getNotifyBusiness(route.params.id);
+            getNotifyCoute.value =res.data.data.length
+    } catch (error) {
+       console.error(error) 
+    }
+}
 </script>

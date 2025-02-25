@@ -92,10 +92,11 @@ const onClick = (title) => {
       <div class="card flex flex-col justify-between">
         <i class="fas fa-file-alt text-red-500 text-5xl"></i>
         <p class="text-center text-lg font-medium mt-2">จัดการใบเตือน</p>
-        <Button v-if="resDataComon?.notify_warning>0" type="button" class=" !text-primary-main" :badge="resDataComon?.notify_warning" badgeSeverity="primary" outlined label="ดูข้อมูล"
+        <div></div>
+        <!-- <Button v-if="resDataComon?.notify_warning>0" type="button" class=" !text-primary-main" :badge="resDataComon?.notify_warning" badgeSeverity="primary" outlined label="ดูข้อมูล"
           @click="navigateTo('/inspector/list/business-tourlist')"></Button>
         <Button v-else type="button" class=" !text-primary-main"  outlined label="ดูข้อมูล"
-        @click="navigateTo('/inspector/list/business-tourlist')" ></Button>
+        @click="navigateTo('/inspector/list/business-tourlist')" ></Button> -->
       </div>
 
       <!-- Card 4 -->

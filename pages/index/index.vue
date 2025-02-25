@@ -1,46 +1,38 @@
 <template>
-  <div class="min-h-screen bg-gray-100">
-    <!-- Header -->
-    <div class="bg-primary-main text-white p-4 flex items-center justify-between">
-      <div class="flex items-center">
-        <i class="fas fa-user-circle text-xl mr-2"></i>
-        <span v-if="name" class="text-lg font-semibold">{{name}}</span>
-        <div v-else class="underline cursor-pointer" @click="navigateTo('/auth/login')">
+ <div class="min-h-screen bg-white p-4">
+    <!-- Title -->
+    <van-nav-bar title="" :border="true">
+
+      <template #left>
+        <h1 class="header-label">กรอกข้อมูลของคุณ</h1>
+      </template>
+      <template #right>
+        <span v-if="name" class="text-lg font-semibold text-primary-main underline" @click="navigateTo('/auth/login')">ออกจากระบบ</span>
+        <div v-else class="underline cursor-pointer text-primary-main" @click="navigateTo('/auth/login')">
           เข้าสู่ระบบ
         </div>
+      </template>
+
+    </van-nav-bar>
+
+    <!-- List of Shops -->
+    <div v-for="shop in resData" :key="shop.id" class="bg-primary-main cursor-pointer rounded-lg shadow-lg overflow-hidden mb-4 p-1"
+    @click="navigateTo(`/client/information/${shop.id}`)" >
+      <!-- Shop Header -->
+      <div class=" p-3">
+        <h2 class="text-lg font-bold text-white">{{ shop.shop_name }}</h2>
+        <p class="text-sm text-yellow-300">ร้านค้า</p>
       </div>
-      <!-- <i class="fas fa-search text-xl"></i> -->
-      <drawer-menu/>
-    </div>
 
-    <!-- Title -->
-    <div class="p-6 bg-yellow-400 text-black">
-      <h1 class="text-2xl font-bold">TOURIST</h1>
-      <h1 class="text-2xl font-bold">POLICE</h1>
-      <Button label="ABCDEFG UVWXY"  />
-    </div>
+      <!-- Shop Image -->
+      <img :src="shop.image_profile" alt="Shop Image" class="w-full h-52 object-cover">
 
-    <!-- Content -->
-    <div class="p-4">
-
-      <h2 class="text-lg font-semibold mb-4">รายการทั้งหมด</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        <div v-for="(place, index) in resData" :key="index" class="bg-white rounded-lg shadow-md overflow-hidden flex p-2 max-w-md cursor-pointer" @click="navigateTo(`/client/information/${place?.id}`)">
-          <img :src="place?.image_profile" alt="Place" class="w-24 h-24 object-cover">
-          <div class="p-4 flex-1">
-            <h3 class="text-lg font-semibold">{{ place?.shop_name }}</h3>
-            <p class="text-gray-600 text-sm flex items-center">
-              <i class="fas fa-map-marker-alt text-yellow-500 mr-1"></i>
-              {{ place?.shop_address }}
-            </p>
-          </div>
-        </div>
-      </div>
     </div>
+  </div>
 
     <MyToast :data="alertToast" />
 
-  </div>
+ 
 </template>
 
 <script setup>

@@ -36,6 +36,7 @@
 
     </div>
   </Form>
+  <my-toast />
   </div>
 </template>
 
@@ -46,6 +47,7 @@ import * as zod from "zod";
 import * as dataApi from "../api/data.js";
 const isloadingAxi = useState('isloadingAxi')
 
+const alertToast = ref({});
 
 
 const requireValue = "กรุณาระบุข้อมูลให้ถูกต้อง";

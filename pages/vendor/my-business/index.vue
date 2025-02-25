@@ -1,6 +1,9 @@
 <template>
     <div class="bg-zinc-100 min-h-screen">
-        <van-nav-bar :title="'ร้านค้า'" left-arrow @click-left="navigateTo('/')">
+        <van-nav-bar :title="'ร้านค้า'" >
+            <template #title>
+        <h1 class="header-label">ร้านค้า</h1>
+      </template>
             <template #left @click="navigateTo('/')">
                 <back-page />
             </template>
@@ -11,7 +14,7 @@
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-2xl font-bold text-gray-800">ร้านค้าของฉัน</h2>
                 <button @click="navigateTo('/vendor/register-business/welcome')"
-                    class="flex items-center gap-2 px-4 py-2 bg-yellow-400 text-black font-semibold rounded-lg shadow-md hover:bg-yellow-500 transition">
+                    class="flex items-center gap-2 px-4 py-2 bg-primary-main text-black font-semibold rounded-lg shadow-md hover:bg-primary-main transition">
                     <i class="fa-solid fa-plus"></i> เพิ่มร้านค้า
                 </button>
             </div>
@@ -25,7 +28,7 @@
 
                         <!-- รูปภาพ -->
                         <img :src="shop.image_profile" alt="ร้านค้า"
-                            class="w-24 h-24 rounded-full border-2 border-yellow-400 object-cover" />
+                            class="w-24 h-24 rounded-full object-cover" />
 
                         <!-- รายละเอียดร้านค้า -->
                         <div class="flex flex-col flex-grow">
@@ -38,7 +41,7 @@
                     <!-- ปุ่มดูรายละเอียดและแก้ไข -->
                     <div class="flex space-x-2 mt-4 w-full justify-center">
                         <button @click="navigateTo(`/vendor/manage-business/home/${shop?.id}`)"
-                            class="flex items-center gap-2 px-4 py-2 bg-yellow-400 text-black rounded-lg shadow hover:bg-yellow-500 transition">
+                            class="flex items-center gap-2 px-4 py-2 bg-primary-main text-black rounded-lg shadow hover:bg-primary-main transition">
                             <i class="fa-solid fa-eye"></i> ดูรายละเอียด
                         </button>
                     </div>
@@ -51,11 +54,8 @@
 </template>
 <style scoped>
 .van-nav-bar {
-    --van-nav-bar-background: #ffc83A;
-    --van-nav-bar-text-color: black;
-    --van-nav-bar-icon-color: black;
-    --van-nav-bar-title-text-color: black;
-    --van-nav-bar-height: 70px
+  --van-nav-bar-background: white;
+  --van-nav-bar-height: 80px
 }
 </style>
 <script setup>

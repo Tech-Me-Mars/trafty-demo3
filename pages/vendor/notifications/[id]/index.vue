@@ -1,68 +1,33 @@
 <template>
-  <div class="min-h-screen bg-primary-main flex flex-col">
+  <div class="min-h-screen  flex flex-col">
     <!-- Header Section -->
-    <van-nav-bar :title="('แจ้งเตือน')" :border="false">
+    <van-nav-bar :title="('แจ้งเตือน')" :border="true">
+      <template #title="">
+        <h1 class="header-label">การแจ้งเตือน</h1>
+      </template>
       <template #left>
         <BackPage @click="navigateTo(`/vendor/manage-business/home/${route.params.id}`)" />
       </template>
     </van-nav-bar>
 
     <!-- Notification Section -->
-    <section class="p-4 flex-grow pt-10 space-y-2 ">
-      <div v-for="item in resNotify" :key="item.id" class=" bg-white shadow-md p-4 cursor-pointer rounded-lg">
-        <div class="flex items-center">
-          <!-- Icon -->
-          <div class="flex-shrink-0 bg-red-100 w-10 h-10 flex items-center justify-center rounded-full">
-            <i class="fas fa-bell text-red-500 text-xl"></i>
-          </div>
+    <section class="p-4 flex-grow space-y-4">
+      <div v-for="item in resNotify" :key="item.id" class="bg-white shadow-md p-4  border-l-4 border-red-500">
+        <!-- Title -->
+        <p class="text-red-500 font-bold text-lg">แจ้งเตือนการประเมิน</p>
+        <!-- Description -->
+        <p class="text-sm text-gray-700 mt-2 line-clamp-2">
+          {{ item.warning_details }}
+        </p>
 
-          <!-- Content -->
-          <div class="ml-4 flex-1">
-            <p class="text-sm font-semibold text-gray-900">{{ item.warning_title }}</p>
-            <p class="text-sm text-gray-600 mt-1 line-clamp-2">
-              {{ item.warning_details }}
-            </p>
-
-          </div>
-        </div>
-
-
-        <div class="flex justify-end">
-          <!-- Button -->
-          <Button @click="onClickSelect(item)" label="ตอบกลับ" size="small" severity="contrast" class="!text-white">
-          </Button>
-
-          <van-popup v-model:show="showPopupReply" round position="bottom" :style="{ height: '70%' }">
-            <Form @submit="handleNext" class="p-6 bg-white rounded-t-lg relative">
-              <!-- ปุ่มปิด -->
-              <button @click="showPopupReply = false" class="absolute top-4 right-4 text-gray-500">
-                <i class="fas fa-times text-xl"></i>
-              </button>
-
-              <!-- หัวข้อ -->
-              <h2 class="text-lg font-bold text-gray-900">ตอบกลับใบเตือน</h2>
-
-              <!-- รายละเอียดใบเตือน -->
-              <p class="mt-2 text-gray-700 text-sm">
-                {{ warning_details }}
-              </p>
-
-              <!-- ฟอร์มตอบกลับ -->
-              <div class="mt-4">
-
-                <label class="block text-sm font-semibold text-gray-900 mb-1">ตอบกลับเจ้าหน้าที่</label>
-                <Textarea class="w-full p-3 border border-yellow-400 rounded-lg focus:ring focus:ring-yellow-300"
-                  placeholder="พิมพ์ตอบกลับที่นี่..." rows="4" v-model="respond_warning_note"
-                  :invalid="errors?.respond_warning_note ? true : false"></Textarea>
-              </div>
-
-              <!-- ปุ่มตอบกลับ -->
-              <Button type="submit" :loading="isloadingAxi" label="ตอบกลับใบเตือน"
-                class="mt-4 w-full bg-yellow-400 text-white font-semibold py-3 rounded-lg">
-
-              </Button>
-            </Form>
-          </van-popup>
+        <!-- Button -->
+        <div class="flex justify-center mt-3">
+          <button
+            @click="navigateTo(`/vendor/notifications/${route.params.id}/${item.survey_audit_police_id}/reply`)"
+            class="px-4 py-2 bg-red-500 !text-secondary-main rounded-lg text-sm font-semibold"
+          >
+            ตอบกลับแจ้งเตือน
+          </button>
         </div>
       </div>
     </section>
@@ -73,11 +38,8 @@
 
 <style scoped>
 .van-nav-bar {
-  --van-nav-bar-background: #ffc83A;
-  --van-nav-bar-text-color: black;
-  --van-nav-bar-icon-color: black;
-  --van-nav-bar-title-text-color: black;
-  --van-nav-bar-height: 70px;
+  --van-nav-bar-background: white;
+  --van-nav-bar-height: 80px
 }
 </style>
 

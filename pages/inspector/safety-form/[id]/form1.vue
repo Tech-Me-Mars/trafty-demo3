@@ -1,57 +1,84 @@
 <style scoped>
 .van-nav-bar {
-  --van-nav-bar-background: #ffc83A;
-  --van-nav-bar-text-color: black;
-  --van-nav-bar-icon-color: black;
-  --van-nav-bar-title-text-color: black;
-  --van-nav-bar-height: 70px
+  --van-nav-bar-background: white;
+  --van-nav-bar-height: 80px
 }
 </style>
 <template>
-  <div class="min-h-screen bg-primary-main flex flex-col">
-    <van-nav-bar :title="'แบบตรวจสอบด้านความปลอดภัย'" left-arrow  :border="false"
-      @click-left="navigateTo(`/client/information/${route.params.id}`)">
+  <div class="min-h-screen">
+
+    <van-nav-bar :title="'แบบตรวจสอบด้านความปลอดภัย'" left-arrow :border="false">
+
+      <template #title>
+        <h1 class="header-label text-lg" @click="router.go(-1)">แบบตรวจสอบด้านความปลอดภัย</h1>
+      </template>
+      <template #left>
+        <BackPage @click="router.go(-1)"/>
+        </template>
+
     </van-nav-bar>
-    <section class="p-4 card-content flex-grow pt-10">
-      <!-- <Form :validation-schema="yupSchema" @submit="onSubmit"> -->
-      <form @submit.prevent="submitForm">
+    <!-- แสดงหัวข้อของแต่ละแบบสอบถาม -->
+    <template v-for="(survey, sIndex) in surveys" :key="sIndex">
+      <h2 class="font-bold text-lg mb-4 text-gray-900">
+        {{ sIndex + 1 }}. {{ survey.topic.name }}
+      </h2>
 
+      <!-- ตารางแบบสอบถาม -->
+      <div class="overflow-x-auto mb-6">
+        <table class="w-full border-collapse border border-gray-300">
+          <!-- หัวตาราง -->
+          <thead>
+            <tr class="bg-yellow-300 text-gray-900">
+              <th class="p-3 border border-gray-300 text-left">รายการ</th>
+              <th class="p-3 border border-gray-300 text-center">มี</th>
+              <th class="p-3 border border-gray-300 text-center">ไม่มี</th>
+            </tr>
+          </thead>
 
+          <!-- เนื้อหาแบบสอบถาม -->
+          <tbody>
+            <tr v-for="(question, qIndex) in survey.questions" :key="question.id" class="border-b">
+              <!-- ข้อคำถาม -->
+              <td class="p-3 border border-gray-300 text-gray-800">
+                {{ qIndex + 1 }}. {{ question.text }}
+              </td>
 
+              <!-- ตัวเลือก 'มี' -->
+              <td class="p-3 border border-gray-300 text-center">
+                <Checkbox v-for="choice in question.choices.filter(c => c.audit_choice_text === 'มี')" :key="choice.id"
+                  :inputId="`yes_${choice.id}`" v-model="answers[question.id]" :binary="true" :true-value="choice.id"
+                  :false-value="null" class="mr-2" />
+              </td>
 
-        <div class="card mb-5">
+              <!-- ตัวเลือก 'ไม่มี' -->
+              <td class="p-3 border border-gray-300 text-center">
+                <Checkbox v-for="choice in question.choices.filter(c => c.audit_choice_text === 'ไม่มี')"
+                  :key="choice.id" :inputId="`no_${choice.id}`" v-model="answers[question.id]" :binary="true"
+                  :true-value="choice.id" :false-value="null" class="mr-2" />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </template>
 
-          <h2 class="font-bold text-lg mb-8">
-            {{ resSurvey?.topic?.name }}
-          </h2>
+    <!-- แสดงข้อความแจ้งเตือนถ้ายังไม่ได้เลือก -->
+    <p v-if="showErrors" class="text-red-500 text-sm mt-3 mb-5 text-center">
+      กรุณาเลือกคำตอบให้ครบทุกข้อ
+    </p>
 
-          <div class="space-y-4">
-            <div v-for="(question, index) in questions" :key="question.id" class="form-group">
+    <!-- ปุ่มส่งแบบสอบถาม -->
+    <!-- <button
+      @click="submitForm"
+      class="mt-4 px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-semibold"
+    >
+      ส่งแบบสอบถาม
+    </button> -->
+    <div class="flex justify-center mb-10">
+      <Button :loading="isloadingAxi" label="ส่งแบบสอบถาม" @click="submitForm" class="!text-secondary-main" />
+    </div>
+    <MyToast :data="alertToast" />
 
-              <label class="" :for="`radio`">{{ question.text }}</label>
-              <div class="flex flex-col flex-wrap gap-2 mt-3">
-                <div class="flex items-center gap-2 bg-yellow-100 p-3" v-for="choice in question.choices" :key="choice.id">
-                    <RadioButton :inputId="`question_${choice.id}`" v-model="answers[question.id]"
-                      :value="choice.id" />
-                  <label :for="`question_${choice.id}`">{{ choice.audit_choice_text }}</label>
-                </div>
-                <p v-if="showErrors && !answers[question.id]" class="error-text">
-                  กรุณาเลือกคำตอบสำหรับข้อนี้
-                </p>
-              </div>
-            </div>
-
-          </div>
-        </div>
-        <!-- <NuxtLink to="/vendor/manage-business/survay/form3"> -->
-        <Button :loading="isloadingAxi" label="ถัดไป" severity="primary" type="submit" class="w-full" :pt="{
-          root: {
-            class: '!border-primary-main'
-          },
-        }" />
-        <!-- </NuxtLink> -->
-      </form>
-    </section>
   </div>
 </template>
 
@@ -59,108 +86,99 @@
 definePageMeta({
   middleware: ["auth"],
 });
+const route = useRoute();
+const router = useRouter();
+const alertToast = ref({});
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 const isloadingAxi = useState("isloadingAxi");
-import { ref, computed, onMounted } from "vue";
-import { useForm, Field, Form, ErrorMessage } from "vee-validate";
-import * as Yup from "yup";
 import * as dataApi from "./api/data.js";
+const surveys = ref([]);
+const answers = ref({});
+const showErrors = ref(false);
 
-const route = useRoute();
-
-const questions = ref([]); // เก็บข้อมูลคำถาม
-const answers = ref({}); // เก็บคำตอบของผู้ใช้
-const showErrors = ref(false); // ใช้ตรวจสอบว่าแสดงข้อความแจ้งเตือนหรือไม่
-
-// ฟังก์ชันสำหรับโหลดคำตอบที่มีอยู่แล้ว (edit mode)
-const getChoiceForUpdate = async (surveyId) => {
-  try {
-    const timeSurveyResponse = await dataApi.geyTimeSurvey(surveyId);
-    const existingAnswers = timeSurveyResponse.data.data.survey_audit_police;
-    console.log(existingAnswers)
-    if (!existingAnswers) {
-      return
-      // return loadSurveyFromVendorForFirstAudit();
-    }
-    // กรองเฉพาะค่าที่ audit_questions_id มีอยู่ใน questions
-    const filteredAnswers = existingAnswers.filter(entry => 
-      questions.value.some(q => q.id === entry.audit_questions_id)
-    );
-
-    // เติมค่าลงใน answers
-    filteredAnswers.forEach(entry => {
-      answers.value[entry.audit_questions_id] = entry.audit_choices_id;
-    });
-
-  } catch (error) {
-    console.error("Error fetching existing choices:", error);
-  }
-};
-
-const loadSurveyFromVendorForFirstAudit =async ()=>{
-  try {
-    const res = await dataApi.geyVendorSurveyByBusinessId(route.params.id)
-    const existingAnswers = res.data.data.survey_audit;
-    const filteredAnswers = existingAnswers.filter(entry => 
-      questions.value.some(q => q.id === entry.audit_questions_id)
-    );
-    // เติมค่าลงใน answers
-    filteredAnswers.forEach(entry => {
-      answers.value[entry.audit_questions_id] = entry.audit_choices_id;
-    });
-  } catch (error) {
-    console.error(error)
-  }
-}
-
-
-const resSurvey = ref()
 const loadSurvey = async () => {
   try {
-    const surveyResponse = await dataApi.geySurveyBuId(1);
-    resSurvey.value = surveyResponse.data.data;
-    questions.value = surveyResponse.data.data.questions;
-    // await getChoiceForUpdate(route.params.id);
+    // ดึงข้อมูลจาก API 3 ชุดพร้อมกัน
+    const [res1, res2, res3] = await Promise.all([
+      dataApi.getSurveyById(1),
+      dataApi.getSurveyById(2),
+      dataApi.getSurveyById(3)
+    ]);
+
+    // เก็บข้อมูลทั้งหมดไว้ใน surveys
+    surveys.value = [res1.data.data, res2.data.data, res3.data.data];
+
+    console.log(surveys.value);
   } catch (error) {
-    console.error("Error fetching questions:", error);
-  }
-}
-onMounted(async () => {
-  loadSurvey();
-});
-
-const submitForm = async () => {
-  showErrors.value = true; // เปิดให้แสดงข้อความแจ้งเตือน
-
-  const isValid = questions.value.every(question => answers.value[question.id]);
-
-  if (isValid) {
-    // แปลง answers เป็นอาร์เรย์ของอ็อบเจ็กต์ [{ "8": 1 }, { "9": 3 }, ...]
-    const formattedAnswers = Object.keys(answers.value).map(key => ({
-      [key]: answers.value[key]
-    }));
-    await saveToLocalStorage("audit_choice", formattedAnswers);
-    await navigateTo(`/inspector/safety-form/${route.params.id}/form2`);
-  } else {
-    // alert("กรุณาตอบทุกข้อก่อนส่งแบบสอบถาม");
+    console.error("Error fetching surveys:", error);
   }
 };
 
-function saveToLocalStorage(key, newValue) {
-  // ตรวจสอบว่ามีข้อมูลใน localStorage หรือไม่
-  let storedData = JSON.parse(localStorage.getItem(key)) || [];
-
-  // ลบข้อมูลที่มี question_id เดิมออกก่อน (ป้องกันการซ้ำซ้อน)
-  storedData = storedData.filter(
-    item => !newValue.some(newItem => Object.keys(newItem)[0] === Object.keys(item)[0])
+// ✅ ตรวจสอบว่าทุกคำถามมีคำตอบหรือไม่ (ห้ามเป็น null)
+const validateForm = () => {
+  showErrors.value = true;
+  return surveys.value.every(survey =>
+    survey.questions.every(
+      question => answers.value[question.id] !== undefined && answers.value[question.id] !== null
+    )
   );
+};
 
-  // เพิ่มข้อมูลใหม่เข้าไป
-  storedData = [...storedData, ...newValue];
+// ✅ ฟังก์ชันส่งแบบฟอร์ม
+const submitForm = async () => {
+  try {
+    if (validateForm()) {
+      const formattedAnswers = Object.keys(answers.value).map(key => ({
+        [key]: answers.value[key]
+      }));
+      console.log(formattedAnswers)
 
-  // บันทึกกลับไปยัง localStorage
-  localStorage.setItem(key, JSON.stringify(storedData));
-}
+      const payload = {
+        "business_id": parseInt(route.params.id),
+        "user_type": "เจ้าหน้าที่ตำรวจท่องเที่ยว",
+        "user_id": null,
+        "user_name": null,
+        "police_id": null,
+        "police_name": null,
+        "police_headquarters_id": null,
+        "police_headquarters_name": null,
+        "security_audit_times": null,
+        "safety_audit_date": null,
+        "safety_audit_time": null,
+        "safety_audit_location": null,
+        "choice": formattedAnswers,
+        "score_show": null,
+      }
+      const res = await dataApi.saveSurveyAudit(payload);
+      alertToast.value = {
+        title: 'สำเร็จ',
+        color: 'info',
+        isError: false,
+        msg: res.data.message,
+      }
+      // clearAuditLocalStorageKeys();
+      // เปลี่ยนเส้นทางไปยังหน้าอื่น
+      // setTimeout(() => {
+      navigateTo(`/inspector/send-warning/${res.data.data}/status`);
+      // await saveToLocalStorage("audit_choice", formattedAnswers);
+      // alert("ส่งแบบสอบถามสำเร็จ!");
+    } else {
+      // alert("กรุณาตอบทุกข้อก่อนส่งแบบสอบถาม");
+    }
 
+  } catch (error) {
+    alertToast.value = {
+      title: 'ล้มเหลว',
+      isError: true,
+      color: "error",
+      msg: error.response?.data?.message || "Error occurred",
+      dataError: error,
+    };
+    console.error(error)
+  }
+};
+
+// โหลดข้อมูลเมื่อ Component ถูก Mount
+loadSurvey();
 </script>

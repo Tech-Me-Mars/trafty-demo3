@@ -8,10 +8,10 @@
   
         <!-- Title -->
         <h1 class="text-xl font-bold text-red-500 mt-4">ส่งสำเร็จ</h1>
-        <p class="text-gray-700 mt-2">ขอบคุณสำหรับการส่งใบเตือน</p>
+        <p class="text-gray-700 mt-2">ขอบคุณสำหรับการตอบกลับใบเตือน</p>
   
         <!-- Button -->
-        <NuxtLink to="/inspector/home">
+        <NuxtLink :to="`/vendor/manage-business/home/${route.params.id}`">
           <button class="mt-6 w-full bg-red-500 !text-secondary-main py-3 rounded-lg font-bold text-lg">
             กลับสู่หน้าหลัก
           </button>
@@ -24,5 +24,6 @@
   definePageMeta({
     middleware: ["auth"],
   });
+  const route = useRoute();
   </script>
   

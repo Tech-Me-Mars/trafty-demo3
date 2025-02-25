@@ -5,7 +5,7 @@
 
     <van-nav-bar :title="resProfile?.role_id == 3 ? 'ตรวจสอบ' : ''" :border="true">
       <template #left>
-        <back-page @click="navigateTo('/inspector/home')" />
+        <back-page @click="router.go(-1)" />
       </template>
     </van-nav-bar>
 
@@ -27,8 +27,8 @@
         <i class="fas fa-exclamation-circle mr-2"></i> รออนุมัติ
       </div>
       <div v-if="resInfo?.status == true"
-        class="bg-red-100 text-green-500 text-sm flex items-center justify-center py-2">
-        <i class="fa-regular fa-circle-check mr-2"></i> รออนุมัติ
+        class="bg-green-50 text-green-500 text-sm flex items-center justify-center py-2">
+        <i class="fa-regular fa-circle-check mr-2"></i> อนุมัติแล้ว
       </div>
 
       <p class="text-gray-700 flex items-center mt-5">
@@ -58,9 +58,15 @@
           <template #title class="!p-4">
             <h1 class="text-md lg:text-xl">ความปลอดภัยร้านค้า</h1>
           </template>
-          <div class="p-4">
-            <h3 class="text-lg font-semibold text-gray-800">มาตรฐานความปลอดภัย</h3>
-            <p class="text-gray-600 mt-2">ข้อมูลมาตรฐานความปลอดภัยของร้านค้า...</p>
+          <div class="">
+            <div class="max-w-xl mx-auto p-4 bg-white shadow-md rounded-md">
+              <h2 class="text-lg font-bold text-gray-800 mb-4 text-center">✅ รายการที่มีมาตรการ</h2>
+              <ul class="divide-y divide-gray-300">
+                <li v-for="(item, index) in filteredData " :key="index" class="py-2 px-4">
+                  {{ item.audit_questions_text }}
+                </li>
+              </ul>
+            </div>
           </div>
         </van-tab>
       </van-tabs>
@@ -189,13 +195,15 @@ const resPolicy = ref([])
 const loadChoiceAudit = async () => {
   try {
     const res = await dataApi.getResultPoliceSurveyAudit(route.params.id);
-    resPolicy.value = res.data.data;
+    resPolicy.value = res.data.data.flatMap(item => item.question);
+    // resPolicy.value = res.data.data;
+    console.log('resPolicy', resPolicy.value)
     console.log(resPolicy)
   } catch (error) {
     console.error(error)
   }
 }
-
+const filteredData = computed(() => resPolicy.value.filter(item => item.choice_text === "มี"));
 const isLiked = ref(false);
 
 const toggleLike = () => {
