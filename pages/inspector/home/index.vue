@@ -73,9 +73,9 @@ const onClick = (title) => {
         <i class="fas fa-map-marked-alt text-red-500 text-5xl"></i>
         <p class="text-center text-lg font-medium mt-2">จัดการแหล่งท่องเที่ยว</p>
         <Button v-if="resDataComon?.notify_business_tourist>0" type="button" class=" !text-primary-main" :badge="resDataComon?.notify_business_tourist" badgeSeverity="primary" outlined label="ดูข้อมูล"
-          @click="navigateTo('/inspector/list/business-tourlist')"></Button>
+          @click="navigateTo('/inspector/list/tourlist')"></Button>
         <Button v-else type="button" class=" !text-primary-main"  outlined label="ดูข้อมูล"
-        @click="navigateTo('/inspector/list/business-tourlist')" ></Button>
+        @click="navigateTo('/inspector/list/tourlist')" ></Button>
       </div>
 
       <!-- Card 2 -->

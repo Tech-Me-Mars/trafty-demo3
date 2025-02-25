@@ -11,7 +11,7 @@ export function getProfile() {
   return request("get", url, {}, true);
 }
 
-export function geySurveyBuId(id) {
+export function getSurveyById(id) {
   const url = `/api/v1/survey/get-survey/${id}`;
   return request("get", url, {}, true);
 }

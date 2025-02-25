@@ -1,84 +1,58 @@
 <template>
-    <div class="bg-zinc-100 min-h-screen">
-        <van-nav-bar :title="t('จัดการแหล่งท่องเที่ยว')" left-arrow @click-left="navigateTo('/inspector/home')">
+    <div class="min-h-screen bg-white flex flex-col">
+
+        <van-nav-bar :title="'จัดการแห่งท่องเที่ยว'" :border="true" >
+            <template #left>
+                <back-page @click="navigateTo('/inspector/home')" />
+            </template>
         </van-nav-bar>
-        <div class="flex justify-between flex-wrap gap-2 bg-white px-4 py-3">
-            <h1 class="text-xl font-semibold">{{ t('แหล่งท่องเที่ยว') }} ({{ resSurveytouristwaiting.length }})</h1>
-            <Select v-model="status_select" disabled :options="statusOptions" optionLabel="name" optionValue="id"
-                class="w-[10rem]">
-
-            </Select>
-        </div>
 
 
-        <div class="p-4">
-            <!-- กล่องข้อมูลธุรกิจ -->
-            <div class="border rounded-lg shadow-md bg-white w-full max-w-md mx-auto mb-2" v-for="(item,index) in resSurveytouristwaiting" :key="index">
-                <div class="p-4">
-                    <!-- ชื่อธุรกิจ -->
-                    <div class="flex justify-between items-center">
-                        <h2 class="text-lg font-semibold text-gray-800">{{ item?.shop_name }}</h2>
-                        <span class="text-white bg-yellow-500 rounded-full px-2 py-2 text-xs">{{ item?.survey_success_text }}</span>
-                    </div>
-                    <!-- ที่อยู่ธุรกิจ -->
-                    <p class="text-gray-500 mt-1 text-sm mb-6"></p>
+        <section class="p-4 flex-grow pt-10">
+            <div class="">
+                <!-- หัวข้อรายการ -->
+                <h2 class="text-lg font-bold text-gray-800 mb-4">
+                    รายการรอตรวจสอบ
+                </h2>
 
+                <!-- รายการร้านค้า -->
+                <div v-if="resSurveytouristwaiting.length > 0">
+                    <div v-for="shop in resSurveytouristwaiting" :key="shop.id"
+                        class="border-b border-gray-300 py-4 flex justify-between items-center">
+                        <!-- รายละเอียดร้านค้า -->
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-900">{{ shop?.shop_name }}</h3>
+                            <p class="text-gray-600 text-sm">{{ shop?.business_type_name }}</p>
+                        </div>
 
-                    <!-- ปุ่มแอคชัน -->
-                    <hr class="border-t mb-4 mx-5">
-                    <div class="flex  gap-3">
-
-                        <Button v-if="item?.survey_status_id == 1" disabled :loading="isloadingAxi" :label="t('ตรวจสอบแล้ว')" severity="primary" variant="outlined" class="w-full" :pt="{
-                            label: {
-                                class: 'text-primary-main'
-                            },
-                            root: {
-                                class: '!border-primary-main'
-                            },
-
-                        }"  />
-                        <Button v-else :loading="isloadingAxi" :label="t('ตรวจสอบ')" severity="primary" variant="outlined" class="w-full" :pt="{
-                            label: {
-                                class: 'text-primary-main'
-                            },
-                            root: {
-                                class: '!border-primary-main'
-                            },
-
-                        }" @click="navigateTo(`/client/information/${item.business_id}`)" />
-                        <!-- <Button :loading="isloadingAxi" label="แก้ไข" severity="primary" variant="outlined" class="w-full" :pt="{
-                            label: {
-                                class: 'text-primary-main'
-                            },
-                            root: {
-                                class: '!border-primary-main'
-                            },
-
-                        }" />
-                        <Button :loading="isloadingAxi" icon="fa-regular fa-trash-can" label="" severity="danger" variant="outlined"
-                            class="!w-[10rem]" /> -->
+                        <!-- ปุ่มตรวจสอบ -->
+                        <!-- <button @click="navigateTo(`/client/information/${shop?.id}`)"
+                            class="bg-red-500 hover:bg-red-600 text-white text-sm font-semibold py-2 px-4 rounded">
+                            ตรวจสอบ
+                        </button> -->
+                        <Button label="ตรวจสอบ" class="!text-secondary-main" @click="navigateTo(`/client/information/${shop?.id}`)" />
                     </div>
                 </div>
+
+                <no-data v-else />
             </div>
-        </div>
+        </section>
 
     </div>
 </template>
 <style scoped>
 .van-nav-bar {
-    --van-nav-bar-background: #ffc83A;
-    --van-nav-bar-text-color: black;
-    --van-nav-bar-icon-color: black;
-    --van-nav-bar-title-text-color: black;
-    --van-nav-bar-height: 70px
+  --van-nav-bar-background: white;
+  --van-nav-bar-height: 80px
 }
 </style>
 <script setup>
 definePageMeta({
-  middleware: ["auth"],
+    middleware: ["auth"],
 });
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
+
 const isloadingAxi = useState("isloadingAxi");
 const router = useRouter();
 const route = useRoute();
@@ -88,7 +62,7 @@ import * as dataApi from "./api/data.js";
 const resSurveytouristwaiting = ref([])
 const loadListData = async () => {
     try {
-        const res = await dataApi.getsurveytouristwaiting();
+        const res = await dataApi.getsurveybusinessintouristwaiting();
         resSurveytouristwaiting.value = res.data.data;
     } catch (error) {
 
@@ -97,9 +71,12 @@ const loadListData = async () => {
 onMounted(() => {
     loadListData();
 })
-
-const status_select = ref(1)
-const statusOptions = ref([
-    { id: 1, name: t('สถานะ:ทั้งหมด') }
-])
+// const resSurveytouristwaiting2 = ref([
+//     {
+//         id: 1,
+//         shop_name: "หนึ่ง นม นัว",
+//         shop_address: "ถนนพญาไท เขตราชเทวี กรุงเทพฯ",
+//         status: "รอตรวจสอบ",
+//     },
+// ]);
 </script>
