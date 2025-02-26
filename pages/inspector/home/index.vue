@@ -34,6 +34,55 @@ onMounted(() => {
 const onClick = (title) => {
   // showToast(`คุณคลิกที่ "${title}"`);
 };
+const token = localStorage.getItem("token");
+const role_id = localStorage.getItem("role_id");
+const menu = ref();
+const itemsDropDownMenu = ref([
+    {
+        label: "หน้าหลัก",
+        icon: "fas fa-home",
+        command: () => {
+            router.push("/");
+        }
+    },
+    // เงื่อนไข: ถ้า role_id == "2" และมี token ให้เพิ่มเมนู "ธุรกิจของฉัน"
+    ...(token && role_id == "2" ? [{
+        label: "ธุรกิจของฉัน",
+        icon: "fas fa-store",
+        command: () => {
+            router.push("/vendor/my-business");
+        }
+    }] : []),
+    // เงื่อนไข: ถ้า role_id == "3" และมี token ให้เพิ่มเมนู "ตรวจสอบข้อมูล"
+    ...(token && role_id == "3" ? [{
+        label: "ตรวจสอบข้อมูล",
+        icon: "fas fa-clipboard-check",
+        command: () => {
+            router.push("/inspector/home");
+        }
+    }] : []),
+    // ถ้ามี Token -> แสดง "Logout"
+    // ถ้าไม่มี Token -> แสดง "เข้าสู่ระบบ"
+    token
+        ? {
+            label: "ออกจากระบบ",
+            icon: "fas fa-sign-out-alt",
+            command: () => {
+                localStorage.removeItem("token");
+                router.push("/auth/login");
+            }
+        }
+        : {
+            label: "เข้าสู่ระบบ",
+            icon: "fas fa-sign-in-alt",
+            command: () => {
+                router.push("/auth/login");
+            }
+        }
+]);
+const toggle = (event) => {
+    menu.value.toggle(event);
+};
 </script>
 
 <style>
@@ -58,7 +107,10 @@ const onClick = (title) => {
         <h1 class="header-label">ระบบบริหารจัดการข้อมูลตำรวจ</h1>
       </template>
       <template #right>
-        <i class="fas fa-user-circle text-gray-400 text-3xl"></i>
+        <button type="button" @click="toggle" class="focus:outline-none">
+            <i class="fas fa-user-circle text-gray-400 text-3xl"></i>
+        </button>
+        <TieredMenu ref="menu" id="user_menu" :model="itemsDropDownMenu" popup />
       </template>
     </van-nav-bar>
 

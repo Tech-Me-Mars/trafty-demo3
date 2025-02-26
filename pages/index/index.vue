@@ -4,13 +4,19 @@
     <van-nav-bar title="" :border="true">
 
       <template #left>
-        <h1 class="header-label">กรอกข้อมูลของคุณ</h1>
+        <h1 class="header-label">การท่องเที่ยวทั้งหมด</h1>
       </template>
       <template #right>
-        <span v-if="name" class="text-lg font-semibold text-primary-main underline" @click="navigateTo('/auth/login')">ออกจากระบบ</span>
+        <button type="button" @click="toggle" class="focus:outline-none">
+            <i class="fas fa-user-circle text-gray-400 text-3xl"></i>
+        </button>
+        <TieredMenu ref="menu" id="user_menu" :model="itemsDropDownMenu" popup />
+        <!-- <div v-if="token" class="underline cursor-pointer text-primary-main" @click="navigateTo('/auth/login')">
+          ออกจากระบบ
+        </div>
         <div v-else class="underline cursor-pointer text-primary-main" @click="navigateTo('/auth/login')">
           เข้าสู่ระบบ
-        </div>
+        </div> -->
       </template>
 
     </van-nav-bar>
@@ -63,9 +69,64 @@ const loadData =async ()=>{
 onMounted(()=>{
   loadData()
 })
+const router = useRouter();
 
+const token = localStorage.getItem("token");
+const role_id = localStorage.getItem("role_id");
+const menu = ref();
+const itemsDropDownMenu = ref([
+    {
+        label: "หน้าหลัก",
+        icon: "fas fa-home",
+        command: () => {
+            router.push("/");
+        }
+    },
+    // เงื่อนไข: ถ้า role_id == "2" และมี token ให้เพิ่มเมนู "ธุรกิจของฉัน"
+    ...(token && role_id == "2" ? [{
+        label: "ธุรกิจของฉัน",
+        icon: "fas fa-store",
+        command: () => {
+            router.push("/vendor/my-business");
+        }
+    }] : []),
+    // เงื่อนไข: ถ้า role_id == "3" และมี token ให้เพิ่มเมนู "ตรวจสอบข้อมูล"
+    ...(token && role_id == "3" ? [{
+        label: "ตรวจสอบข้อมูล",
+        icon: "fas fa-clipboard-check",
+        command: () => {
+            router.push("/inspector/home");
+        }
+    }] : []),
+    // ถ้ามี Token -> แสดง "Logout"
+    // ถ้าไม่มี Token -> แสดง "เข้าสู่ระบบ"
+    token
+        ? {
+            label: "ออกจากระบบ",
+            icon: "fas fa-sign-out-alt",
+            command: () => {
+                localStorage.removeItem("token");
+                router.push("/auth/login");
+            }
+        }
+        : {
+            label: "เข้าสู่ระบบ",
+            icon: "fas fa-sign-in-alt",
+            command: () => {
+                router.push("/auth/login");
+            }
+        }
+]);
+
+const toggle = (event) => {
+    menu.value.toggle(event);
+};
 
 </script>
 
-<style scoped>
+<style >
+.van-nav-bar {
+    --van-nav-bar-background: white!important;
+    --van-nav-bar-height: 80px
+}
 </style>

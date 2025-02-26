@@ -5,7 +5,7 @@
 
     <van-nav-bar :title="resProfile?.role_id == 3 ? 'ตรวจสอบ' : ''" :border="true">
       <template #left>
-        <back-page @click="router.go(-1)" />
+        <back-page @click="goBack" />
       </template>
     </van-nav-bar>
 
@@ -110,6 +110,13 @@ import widgetItemsBusiness from './widgets/widget-items-business.vue';
 import widgetReview from './widgets/widget-review.vue';
 import widgetPolicy from './widgets/widget-policy.vue';
 const router = useRouter();
+const goBack = () => {
+    if (window.history.length > 1) {
+        router.go(-1); // กลับไปหน้าก่อนหน้า
+    } else {
+        router.push("/"); // ถ้าไม่มีหน้าให้กลับ -> ไปหน้าแรก
+    }
+};
 const route = useRoute();
 const isloadingAxi = useState("isloadingAxi");
 import { useI18n } from 'vue-i18n';

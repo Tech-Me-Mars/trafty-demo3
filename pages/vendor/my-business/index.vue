@@ -4,8 +4,8 @@
             <template #title>
         <h1 class="header-label">ร้านค้า</h1>
       </template>
-            <template #left @click="navigateTo('/')">
-                <back-page />
+            <template #left >
+                <back-page @click="navigateTo('/')"/>
             </template>
         </van-nav-bar>
 

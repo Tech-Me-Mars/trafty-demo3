@@ -23,7 +23,7 @@
         <!-- Button -->
         <div class="flex justify-center mt-3">
           <button
-            @click="navigateTo(`/vendor/notifications/${route.params.id}/${item.survey_audit_police_id}/reply`)"
+            @click="navigateTo(`/vendor/notifications/${route.params.id}/${item.id}/reply`)"
             class="px-4 py-2 bg-red-500 !text-secondary-main rounded-lg text-sm font-semibold"
           >
             ตอบกลับแจ้งเตือน

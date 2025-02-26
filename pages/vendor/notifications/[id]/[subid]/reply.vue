@@ -82,7 +82,7 @@ const { handleSubmit, handleReset, errors } = useForm({
 
 const { value: respond_warning_note } = useField('respond_warning_note')
 const { value: survey_warning_id } = useField('survey_warning_id')
-survey_warning_id.value = route.params.id
+survey_warning_id.value = route.params.subid
 
 const handleNext = handleSubmit(async () => {
     try {
@@ -90,7 +90,6 @@ const handleNext = handleSubmit(async () => {
         formData.append('survey_warning_id', parseInt(survey_warning_id.value));
         formData.append('respond_warning_note', respond_warning_note.value);
         const res = await dataApi.saveReplyWarning(formData)
-        await navigateTo(`/vendor/notifications/${route.params.id}/success`)
         alertToast.value = {
             title: ('สำเร็จ'),
             color: 'info',

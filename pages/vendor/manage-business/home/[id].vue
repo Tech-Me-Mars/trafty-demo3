@@ -1,10 +1,17 @@
 <template>
-  <div class="min-h-screen bg-white flex flex-col items-center py-6">
+  <div class="min-h-screen bg-white flex flex-col  ">
     <!-- Header -->
+    <van-nav-bar title="" :border="true">
+
+      <template #left>
+        <BackPage  @click="navigateTo('/vendor/my-business')"/>
+      </template>
+    </van-nav-bar>
+
     <h1 class="text-lg font-bold text-center">ธุรกิจในแหล่งท่องเที่ยว</h1>
 
     <!-- ร้านค้า -->
-    <div class="w-full max-w-xs mt-4 flex flex-col items-center">
+    <div class="w-full max-w-xs mt-4 flex flex-col items-center mx-auto">
       <!-- รูปภาพร้าน -->
       <div class="relative w-42 h-26">
         <img :src="resShop?.image_profile" alt="ร้านค้า" class="w-full h-full object-cover rounded-lg" />
@@ -15,11 +22,13 @@
       <p class="mt-2 text-sm font-semibold text-black">{{ resShop?.shop_name }}</p>
 
       <!-- สถานะ -->
-      <div class="flex items-center gap-2 mt-2 bg-red-100 text-red-500 px-3 py-1 rounded-sm" v-if="resShop?.status == false">
+      <div class="flex items-center gap-2 mt-2 bg-red-100 text-red-500 px-3 py-1 rounded-sm"
+        v-if="resShop?.status == false">
         <i class="fas fa-circle-exclamation"></i>
         <span class="text-sm font-medium">รออนุมัติ</span>
       </div>
-      <div class="flex items-center gap-2 mt-2 bg-green-50 text-green-500 px-3 py-1 rounded-sm" v-if="resShop?.status == true">
+      <div class="flex items-center gap-2 mt-2 bg-green-50 text-green-500 px-3 py-1 rounded-sm"
+        v-if="resShop?.status == true">
         <i class="fa-solid fa-circle-check"></i>
         <span class="text-sm font-medium">ได้รับอนุมัติจากเจ้าหน้าที่</span>
       </div>
@@ -31,11 +40,12 @@
         <li class="py-3 px-4 flex items-center justify-between text-red-500 font-medium">
           ข้อมูลร้านค้า
         </li>
-        <li class="py-3 px-4 flex items-center justify-between text-gray-600 cursor-pointer" @click="navigateTo(`/vendor/notifications/${route.params.id}`)">
+        <li class="py-3 px-4 flex items-center justify-between text-gray-600 cursor-pointer"
+          @click="navigateTo(`/vendor/notifications/${route.params.id}`)">
           การแจ้งเตือน
           <!-- <van-badge :content="getNotifyCoute" v-if="getNotifyCoute>0">
           </van-badge> -->
-          <Badge v-if="getNotifyCoute>0" :value="getNotifyCoute" class="!text-white"></Badge>
+          <Badge v-if="getNotifyCoute > 0" :value="getNotifyCoute" class="!text-white"></Badge>
         </li>
         <li class="py-3 px-4 flex items-center justify-between text-gray-600">
           แก้ไขข้อมูลร้านค้า
@@ -81,13 +91,20 @@ onMounted(() => {
   loadShop();
   loadNotyfy()
 })
-const getNotifyCoute =ref(0);
-const loadNotyfy =async () =>{
-    try {
-            const res  = await dataApi.getNotifyBusiness(route.params.id);
-            getNotifyCoute.value =res.data.data.length
-    } catch (error) {
-       console.error(error) 
-    }
+const getNotifyCoute = ref(0);
+const loadNotyfy = async () => {
+  try {
+    const res = await dataApi.getNotifyBusiness(route.params.id);
+    getNotifyCoute.value = res.data.data.length
+  } catch (error) {
+    console.error(error)
+  }
 }
 </script>
+
+<style >
+.van-nav-bar {
+    --van-nav-bar-background: white!important;
+    --van-nav-bar-height: 80px
+}
+</style>
